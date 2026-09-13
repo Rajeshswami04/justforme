@@ -1,0 +1,85 @@
+:root {
+  --bg: #0a0908;
+  --bg-panel: #100e0b;
+  --amber: #ffb640;
+  --amber-bright: #ffd280;
+  --amber-dim: #6b5636;
+  --amber-dimmer: #3a2f1f;
+  --red: #ff6b5e;
+  --green: #7fdb6a;
+  --border: #3a2f1f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--amber);
+  font-family: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+
+body {
+  min-height: 100vh;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 182, 64, 0.025) 0px,
+    rgba(255, 182, 64, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+::selection {
+  background: var(--amber-dim);
+  color: #0a0908;
+}
+
+button,
+input {
+  font-family: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--amber-bright);
+}
+
+input::placeholder {
+  color: var(--amber-dimmer);
+}
+
+.blink {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink {
+    animation: none;
+  }
+}
+
+*:focus-visible {
+  outline: 1px solid var(--amber-bright);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--amber-dimmer);
+}
