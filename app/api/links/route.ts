@@ -5,8 +5,13 @@ export async function GET(req: NextRequest) {
   if (!checkAuth(req.headers.get("x-app-password"))) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const entries = await listEntries();
-  return NextResponse.json({ entries });
+  try {
+    const entries = await listEntries();
+    return NextResponse.json({ entries });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "unexpected error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
 
 async function fetchTitle(url: string): Promise<string> {
@@ -69,6 +74,11 @@ export async function POST(req: NextRequest) {
     createdAt: Date.now(),
   };
 
-  await addEntry(entry);
-  return NextResponse.json({ entry }, { status: 201 });
+  try {
+    await addEntry(entry);
+    return NextResponse.json({ entry }, { status: 201 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "unexpected error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

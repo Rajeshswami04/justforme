@@ -14,10 +14,10 @@ real database, not just your browser.
    and add:
    - `APP_PASSWORD` — any passphrase you'll remember (this is what locks your
      vault from strangers).
-4. Attach a database: **Storage → Create Database → KV** (this is Vercel's
-   free Redis-backed store, plenty for a personal bookmark list). Once
-   created, click **Connect Project** and pick this project — Vercel fills in
-   `KV_REST_API_URL` and `KV_REST_API_TOKEN` for you automatically.
+4. Attach a database: open the **Storage** tab, choose **Create Database** (or
+   **Browse Marketplace**), then choose **Upstash → Redis → free plan → connect
+   to this project**. Vercel fills in Redis REST credentials for you
+   automatically.
 5. Redeploy (Settings → Deployments → ⋯ → Redeploy) so the new env vars take
    effect.
 6. Visit your `*.vercel.app` URL, enter the passphrase from step 3, and save
@@ -30,13 +30,14 @@ That's it — no server to maintain, no code to touch.
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in APP_PASSWORD; KV vars optional locally
+cp .env.example .env.local   # fill in APP_PASSWORD; Redis vars optional locally
 npm run dev
 ```
 
-Without KV vars set locally, `@vercel/kv` will throw when you try to save —
-local dev is really just for tweaking the UI. Real use happens on the
-deployed Vercel URL, where KV is attached.
+Without Redis vars set locally, the API returns a clear "no database connected"
+error when you try to list or save. Local dev is really just for tweaking the
+UI. Real use happens on the deployed Vercel URL, where Upstash Redis is
+attached.
 
 ## How it works
 
@@ -44,7 +45,8 @@ deployed Vercel URL, where KV is attached.
 - `app/api/links/route.ts` — list and create links; also fetches each page's
   `<title>` server-side so you don't have to type one.
 - `app/api/links/[id]/route.ts` — delete a link.
-- `lib/store.ts` — thin wrapper around Vercel KV, plus the passphrase check.
+- `lib/store.ts` — thin wrapper around Upstash Redis via `@upstash/redis`, plus
+  the passphrase check.
 
 Every API request must include the `x-app-password` header matching your
 `APP_PASSWORD`, so the vault stays private even though the URL is public.
